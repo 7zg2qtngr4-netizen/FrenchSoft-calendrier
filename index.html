@@ -2,409 +2,750 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FrenchSoft Group | Calendrier des OP</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0d1215;
-      --panel: #182126;
-      --line: #344247;
-      --green: #5fcb92;
-      --text: #f0f5f3;
-      --muted: #a5b6b1;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, Arial, sans-serif;
-    }
-    header {
-      padding: 28px 18px;
-      text-align: center;
-      background: linear-gradient(135deg,#1c3730,#101719);
-      border-bottom: 1px solid var(--line);
-    }
-    h1 { margin: 0 0 8px; font-size: 28px; }
-    header p { color: var(--muted); margin: 0; }
-    main { max-width: 1050px; margin: auto; padding: 20px 14px; }
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 18px;
-    }
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-    button, select, .link {
-      font: inherit;
-      border-radius: 9px;
-      padding: 10px 13px;
-    }
-    button {
-      border: 1px solid var(--line);
-      background: #26343a;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover { border-color: var(--green); }
-    select {
-      background: #26343a;
-      border: 1px solid var(--line);
-      color: white;
-      max-width: 100%;
-    }
-    .calendar {
-      display: grid;
-      grid-template-columns: repeat(7,minmax(0,1fr));
-      gap: 5px;
-    }
-    .weekday {
-      text-align: center;
-      color: var(--muted);
-      padding: 8px 0;
-      font-size: 13px;
-    }
-    .day {
-      min-height: 75px;
-      padding: 8px 4px;
-      text-align: center;
-      background: #202c31;
-      border: 1px solid transparent;
-      border-radius: 9px;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 7px;
-    }
-    .day.has-event { border-color: #367c5d; }
-    .day.selected { background: #275640; border-color: var(--green); }
-    .dot {
-      width: 7px;
-      height: 7px;
-      background: var(--green);
-      border-radius: 50%;
-    }
-    .count { font-size: 11px; color: #a4ebc4; }
-    .event {
-      background: #202c31;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 16px;
-      margin: 12px 0;
-    }
-    .event h3 { margin: 0 0 10px; }
-    .event p { color: var(--muted); margin: 7px 0; }
-    .tag {
-      display: inline-block;
-      color: #b3f5d1;
-      background: #28513d;
-      border-radius: 20px;
-      padding: 5px 10px;
-      font-size: 12px;
-    }
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-top: 16px;
-    }
-    .interest.active {
-      background: #286c4a;
-      border-color: var(--green);
-    }
-    .link {
-      display: inline-block;
-      text-decoration: none;
-      color: #071b11;
-      background: var(--green);
-      font-weight: 700;
-    }
-    .notice { color: var(--muted); font-size: 13px; }
-    footer { text-align: center; color: var(--muted); padding: 25px; }
-    @media(max-width:600px) {
-      h1 { font-size: 23px; }
-      .panel { padding: 12px; }
-      .day { min-height: 59px; padding: 7px 2px; }
-      .count { font-size: 9px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FrenchSoft Group | Calendrier des OP</title>
+
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0d1215;
+  --panel: #182126;
+  --line: #344247;
+  --green: #5fcb92;
+  --text: #f0f5f3;
+  --muted: #a5b6b1;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, Arial, sans-serif;
+}
+
+header {
+  padding: 28px 18px;
+  text-align: center;
+  background: linear-gradient(135deg, #1c3730, #101719);
+  border-bottom: 1px solid var(--line);
+}
+
+h1 { margin: 0 0 8px; font-size: 28px; }
+header p { color: var(--muted); margin: 0; }
+
+main {
+  max-width: 1050px;
+  margin: auto;
+  padding: 20px 14px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+button, select, .link {
+  font: inherit;
+  border-radius: 9px;
+  padding: 10px 13px;
+}
+
+button {
+  border: 1px solid var(--line);
+  background: #26343a;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover { border-color: var(--green); }
+
+select {
+  background: #26343a;
+  border: 1px solid var(--line);
+  color: white;
+  max-width: 100%;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.weekday {
+  text-align: center;
+  color: var(--muted);
+  padding: 8px 0;
+  font-size: 13px;
+}
+
+.day {
+  min-height: 75px;
+  padding: 8px 4px;
+  text-align: center;
+  background: #202c31;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.day.has-event { border-color: #367c5d; }
+
+.day.selected {
+  background: #275640;
+  border-color: var(--green);
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+}
+
+.count {
+  font-size: 11px;
+  color: #a4ebc4;
+}
+
+.event {
+  background: #202c31;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+}
+
+.event h3 { margin: 0 0 10px; }
+.event p { color: var(--muted); margin: 7px 0; }
+
+.tag {
+  display: inline-block;
+  color: #b3f5d1;
+  background: #28513d;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.interest.active {
+  background: #286c4a;
+  border-color: var(--green);
+}
+
+.link {
+  display: inline-block;
+  text-decoration: none;
+  color: #071b11;
+  background: var(--green);
+  font-weight: 700;
+}
+
+.notice {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.status { margin: 0 0 14px; }
+.error { color: #ffb3a7; }
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 25px;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 23px; }
+  .panel { padding: 12px; }
+  .day { min-height: 59px; padding: 7px 2px; }
+  .count { font-size: 9px; }
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <h1>🪖 FRENCHSOFT GROUP</h1>
-    <p>Calendrier des parties et OP d'airsoft</p>
-  </header>
 
-  <main>
-    <section class="panel">
-      <div class="toolbar">
-        <button id="prev" aria-label="Mois précédent">❮</button>
-        <h2 id="monthTitle"></h2>
-        <button id="next" aria-label="Mois suivant">❯</button>
-      </div>
+<header>
+  <h1>🪖 FRENCHSOFT GROUP</h1>
+  <p>Calendrier des parties et OP d'airsoft</p>
+</header>
 
-      <div class="toolbar">
-        <label for="region">📍 Filtrer par région</label>
-        <select id="region">
-          <option value="">Toutes les régions</option>
-        </select>
-      </div>
+<main>
 
-      <div class="calendar" id="calendar"></div>
-      <p class="notice">🟢 Les points verts indiquent des parties disponibles.</p>
-    </section>
+<section class="panel">
 
-    <section class="panel">
-      <h2 id="selectionTitle">Parties disponibles</h2>
-      <div id="events"></div>
-    </section>
+  <div class="toolbar">
+    <button id="prev" aria-label="Mois précédent">❮</button>
+    <h2 id="monthTitle"></h2>
+    <button id="next" aria-label="Mois suivant">❯</button>
+  </div>
 
-    <p class="notice">
-      Version de démonstration : les événements affichés
-      sont fictifs. Le bouton « Intéressé » enregistre
-      ton choix uniquement sur cet appareil.
-    </p>
-  </main>
+  <div class="toolbar">
+    <label for="region">📍 Filtrer par région</label>
+    <select id="region">
+      <option value="">Toutes les régions</option>
+    </select>
+  </div>
 
-  <footer>🇫🇷 FrenchSoft Group — Une communauté, une passion.</footer>
+  <div class="calendar" id="calendar"></div>
 
-  <script>
-    // AJOUTER LES VRAIES OP ICI PLUS TARD.
-    // Format des dates : AAAA-MM-JJ
-    // Le lien de réservation doit être une vraie URL HTTPS.
-    const EVENEMENTS = [
-      {
-        id: "demo-1",
-        nom: "OP Milsim — Démonstration",
-        date: "2026-11-21",
-        heure: "09:00",
-        region: "Île-de-France",
-        lieu: "Terrain à confirmer",
-        type: "Milsim",
-        prix: "À confirmer",
-        description: "Exemple de fiche événement pour tester le calendrier.",
-        reservation: ""
-      },
-      {
-        id: "demo-2",
-        nom: "Partie CQB — Démonstration",
-        date: "2026-11-21",
-        heure: "10:00",
-        region: "Hauts-de-France",
-        lieu: "Terrain à confirmer",
-        type: "CQB",
-        prix: "À confirmer",
-        description: "Exemple de partie CQB.",
-        reservation: ""
-      },
-      {
-        id: "demo-3",
-        nom: "Partie forêt — Démonstration",
-        date: "2026-11-28",
-        heure: "08:30",
-        region: "Normandie",
-        lieu: "Terrain à confirmer",
-        type: "Forêt",
-        prix: "À confirmer",
-        description: "Exemple de partie en forêt.",
-        reservation: ""
-      }
-    ];
+  <p class="notice">
+    🟢 Les points verts indiquent des parties disponibles.
+  </p>
 
-    const mois = [
-      "Janvier", "Février", "Mars", "Avril",
-      "Mai", "Juin", "Juillet", "Août",
-      "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
+</section>
 
-    const aujourdHui = new Date();
-    let annee = aujourdHui.getFullYear();
-    let moisActuel = aujourdHui.getMonth();
-    let dateSelectionnee = null;
+<section class="panel">
 
-    const calendrier = document.getElementById("calendar");
-    const liste = document.getElementById("events");
-    const filtre = document.getElementById("region");
+  <h2 id="selectionTitle">Parties disponibles</h2>
 
-    function dateISO(a, m, j) {
-      return `${a}-${String(m + 1).padStart(2, "0")}-${String(j).padStart(2, "0")}`;
+  <p id="status" class="notice status" role="status">
+    Chargement des OP validées…
+  </p>
+
+  <div id="events"></div>
+
+</section>
+
+<p class="notice">
+  Les événements affichés proviennent des propositions
+  validées par la modération.
+  Le bouton « Intéressé » enregistre ton choix
+  uniquement sur cet appareil.
+</p>
+
+</main>
+
+<footer>
+  🇫🇷 FrenchSoft Group — Une communauté, une passion.
+</footer>
+
+<script>
+"use strict";
+
+// CONNEXION GOOGLE APPS SCRIPT
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbzAXFyneS7HeXTGit-IuK6_IUrOU8z39aoCWGWWfdHC_sCDAo8YFH152JWm9i_z3auUaw/exec";
+
+const mois = [
+  "Janvier", "Février", "Mars", "Avril",
+  "Mai", "Juin", "Juillet", "Août",
+  "Septembre", "Octobre", "Novembre", "Décembre"
+];
+
+const aujourdHui = new Date();
+
+let annee = aujourdHui.getFullYear();
+let moisActuel = aujourdHui.getMonth();
+let dateSelectionnee = null;
+let EVENEMENTS = [];
+
+const calendrier = document.getElementById("calendar");
+const liste = document.getElementById("events");
+const filtre = document.getElementById("region");
+const status = document.getElementById("status");
+
+function element(tag, texte, classe) {
+  const el = document.createElement(tag);
+
+  if (texte !== undefined) {
+    el.textContent = texte;
+  }
+
+  if (classe) {
+    el.className = classe;
+  }
+
+  return el;
+}
+
+function dateISO(a, m, j) {
+  return `${a}-${String(m + 1).padStart(2, "0")}-${String(j).padStart(2, "0")}`;
+}
+
+function jourUTC(s) {
+  return Date.parse(s + "T12:00:00Z");
+}
+
+function estISO(s) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(s)
+    && Number.isFinite(jourUTC(s))
+    && new Date(jourUTC(s)).toISOString().slice(0, 10) === s;
+}
+
+function normaliserDate(valeur) {
+  if (typeof valeur !== "string") return "";
+
+  const s = valeur.trim();
+
+  if (estISO(s)) return s;
+
+  const fr = s.match(
+    /^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})$/
+  );
+
+  if (fr) {
+    const iso =
+      `${fr[3]}-${fr[2].padStart(2, "0")}-${fr[1].padStart(2, "0")}`;
+
+    return estISO(iso) ? iso : "";
+  }
+
+  return "";
+}
+
+function extraireDates(texte) {
+  const s = String(texte || "").trim();
+
+  // Dates complètes : 28/11/2026 ou 2026-11-28
+  const matches = [
+    ...s.matchAll(
+      /\d{4}-\d{2}-\d{2}|\d{1,2}[\/.]\d{1,2}[\/.]\d{4}/g
+    )
+  ]
+    .map(m => normaliserDate(m[0]))
+    .filter(Boolean);
+
+  if (matches.length >= 2) {
+    return [matches[0], matches[1]];
+  }
+
+  if (matches.length === 1) {
+    return [matches[0], matches[0]];
+  }
+
+  // Exemple : 28-29 novembre
+  const moisFR = {
+    janvier: 1,
+    fevrier: 2,
+    mars: 3,
+    avril: 4,
+    mai: 5,
+    juin: 6,
+    juillet: 7,
+    aout: 8,
+    septembre: 9,
+    octobre: 10,
+    novembre: 11,
+    decembre: 12
+  };
+
+  const sansAccents = s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  const match = sansAccents.match(
+    /^(\d{1,2})(?:\s*[-–à]\s*(\d{1,2}))?\s+(janvier|fevrier|mars|avril|mai|juin|juillet|aout|septembre|octobre|novembre|decembre)(?:\s+(\d{4}))?$/
+  );
+
+  if (match) {
+    const m = moisFR[match[3]];
+    const a = match[4]
+      ? Number(match[4])
+      : aujourdHui.getFullYear();
+
+    const debut = dateISO(a, m - 1, Number(match[1]));
+    const fin = dateISO(
+      a,
+      m - 1,
+      Number(match[2] || match[1])
+    );
+
+    if (estISO(debut) && estISO(fin) && fin >= debut) {
+      return [debut, fin];
     }
+  }
 
-    function evenementsFiltres() {
-      return EVENEMENTS.filter(e =>
-        !filtre.value || e.region === filtre.value
+  return ["", ""];
+}
+
+function normaliser(e) {
+  if (!e || typeof e !== "object") return null;
+
+  const texteDate = String(e.date || e.dates || "");
+
+  let [debut, fin] = extraireDates(texteDate);
+
+  const expliciteFin = normaliserDate(
+    String(e.dateFin || e.date_fin || e.fin || "")
+  );
+
+  if (expliciteFin) fin = expliciteFin;
+
+  if (
+    !debut ||
+    !fin ||
+    fin < debut ||
+    jourUTC(fin) - jourUTC(debut) > 30 * 86400000
+  ) {
+    return null;
+  }
+
+  const nom = String(e.nom || e.name || "").trim();
+
+  if (!nom) return null;
+
+  return {
+    id: String(
+      e.id || [nom, debut, String(e.lieu || "")].join("|")
+    ),
+    nom,
+    date: debut,
+    dateFin: fin,
+    heure: String(e.heure || "").trim(),
+    region: String(e.region || "Non précisée").trim(),
+    lieu: String(e.lieu || "À confirmer").trim(),
+    type: String(e.type || "OP").trim(),
+    prix: String(e.prix || "Non précisé").trim(),
+    description: String(e.description || "").trim(),
+    reservation: String(e.reservation || "").trim()
+  };
+}
+
+function evenementsFiltres() {
+  return EVENEMENTS.filter(e =>
+    !filtre.value || e.region === filtre.value
+  );
+}
+
+function aLieu(e, date) {
+  return e.date <= date && date <= e.dateFin;
+}
+
+function interets() {
+  try {
+    const a = JSON.parse(
+      localStorage.getItem("frenchsoft-interets")
+    );
+
+    return Array.isArray(a) ? a : [];
+  } catch {
+    return [];
+  }
+}
+
+function modifierInteret(id) {
+  let a = interets();
+
+  a = a.includes(id)
+    ? a.filter(v => v !== id)
+    : [...a, id];
+
+  try {
+    localStorage.setItem(
+      "frenchsoft-interets",
+      JSON.stringify(a)
+    );
+  } catch {}
+
+  afficherEvenements();
+}
+
+function afficherCalendrier() {
+  calendrier.replaceChildren();
+
+  document.getElementById("monthTitle").textContent =
+    `${mois[moisActuel]} ${annee}`;
+
+  ["L", "M", "M", "J", "V", "S", "D"].forEach(j => {
+    calendrier.appendChild(
+      element("div", j, "weekday")
+    );
+  });
+
+  const premier =
+    (new Date(annee, moisActuel, 1).getDay() + 6) % 7;
+
+  const nombreJours =
+    new Date(annee, moisActuel + 1, 0).getDate();
+
+  for (let i = 0; i < premier; i++) {
+    calendrier.appendChild(element("div", ""));
+  }
+
+  const visibles = evenementsFiltres();
+
+  for (let jour = 1; jour <= nombreJours; jour++) {
+    const date = dateISO(annee, moisActuel, jour);
+
+    const nombre = visibles.filter(e =>
+      aLieu(e, date)
+    ).length;
+
+    const bouton = element("button", "", "day");
+
+    bouton.appendChild(
+      element("span", String(jour))
+    );
+
+    if (nombre) {
+      bouton.classList.add("has-event");
+
+      bouton.appendChild(
+        element("span", "", "dot")
+      );
+
+      bouton.appendChild(
+        element("span", `${nombre} OP`, "count")
       );
     }
 
-    function interets() {
-      try {
-        return JSON.parse(localStorage.getItem("frenchsoft-interets")) || [];
-      } catch {
-        return [];
-      }
+    if (dateSelectionnee === date) {
+      bouton.classList.add("selected");
     }
 
-    function modifierInteret(id) {
-      let valeurs = interets();
-      valeurs = valeurs.includes(id)
-        ? valeurs.filter(v => v !== id)
-        : [...valeurs, id];
+    bouton.setAttribute(
+      "aria-label",
+      `${jour} ${mois[moisActuel]} : ${nombre} événement(s)`
+    );
 
-      localStorage.setItem("frenchsoft-interets", JSON.stringify(valeurs));
-      afficherEvenements();
-    }
-
-    function element(tag, texte, classe) {
-      const el = document.createElement(tag);
-      if (texte !== undefined) el.textContent = texte;
-      if (classe) el.className = classe;
-      return el;
-    }
-
-    function afficherCalendrier() {
-      calendrier.replaceChildren();
-
-      document.getElementById("monthTitle").textContent =
-        `${mois[moisActuel]} ${annee}`;
-
-      ["L", "M", "M", "J", "V", "S", "D"].forEach(jour => {
-        calendrier.appendChild(element("div", jour, "weekday"));
-      });
-
-      const premier = (new Date(annee, moisActuel, 1).getDay() + 6) % 7;
-      const nombreJours = new Date(annee, moisActuel + 1, 0).getDate();
-
-      for (let i = 0; i < premier; i++) {
-        calendrier.appendChild(element("div", ""));
-      }
-
-      for (let jour = 1; jour <= nombreJours; jour++) {
-        const date = dateISO(annee, moisActuel, jour);
-        const nombre = evenementsFiltres().filter(e => e.date === date).length;
-
-        const bouton = element("button", "", "day");
-        bouton.appendChild(element("span", String(jour)));
-
-        if (nombre) {
-          bouton.classList.add("has-event");
-          bouton.appendChild(element("span", "", "dot"));
-          bouton.appendChild(element("span", `${nombre} OP`, "count"));
-        }
-
-        if (dateSelectionnee === date) {
-          bouton.classList.add("selected");
-        }
-
-        bouton.setAttribute(
-          "aria-label",
-          `${jour} ${mois[moisActuel]} : ${nombre} événement(s)`
-        );
-
-        bouton.onclick = () => {
-          dateSelectionnee = date;
-          afficherCalendrier();
-          afficherEvenements();
-        };
-
-        calendrier.appendChild(bouton);
-      }
-    }
-
-    function afficherEvenements() {
-      liste.replaceChildren();
-
-      const titre = document.getElementById("selectionTitle");
-      const disponibles = evenementsFiltres()
-        .filter(e => !dateSelectionnee || e.date === dateSelectionnee)
-        .sort((a, b) => (a.date + a.heure).localeCompare(b.date + b.heure));
-
-      titre.textContent = dateSelectionnee
-        ? `📅 Parties du ${dateSelectionnee.split("-").reverse().join("/")}`
-        : "📅 Toutes les parties";
-
-      if (!disponibles.length) {
-        liste.appendChild(element("p", "Aucune partie pour cette sélection."));
-        return;
-      }
-
-      disponibles.forEach(e => {
-        const carte = element("article", "", "event");
-        carte.appendChild(element("h3", e.nom));
-        carte.appendChild(element("span", e.type, "tag"));
-
-        [
-          `📅 ${e.date.split("-").reverse().join("/")} à ${e.heure}`,
-          `📍 ${e.region} — ${e.lieu}`,
-          `💶 Prix : ${e.prix}`,
-          `📝 ${e.description}`
-        ].forEach(texte => carte.appendChild(element("p", texte)));
-
-        const actions = element("div", "", "actions");
-        const interesse = interets().includes(e.id);
-        const bouton = element(
-          "button",
-          interesse ? "✅ Intéressé" : "⭐ Je suis intéressé",
-          interesse ? "interest active" : "interest"
-        );
-
-        bouton.onclick = () => modifierInteret(e.id);
-        actions.appendChild(bouton);
-
-        if (e.reservation && /^https:\/\//i.test(e.reservation)) {
-          const lien = element("a", "🎟️ Réserver", "link");
-          lien.href = e.reservation;
-          lien.target = "_blank";
-          lien.rel = "noopener noreferrer";
-          actions.appendChild(lien);
-        } else {
-          const info = element("span", "Réservation non disponible", "notice");
-          actions.appendChild(info);
-        }
-
-        carte.appendChild(actions);
-        liste.appendChild(carte);
-      });
-    }
-
-    function changerMois(decalage) {
-      const date = new Date(annee, moisActuel + decalage, 1);
-      annee = date.getFullYear();
-      moisActuel = date.getMonth();
-      dateSelectionnee = null;
-      afficherCalendrier();
-      afficherEvenements();
-    }
-
-    document.getElementById("prev").onclick = () => changerMois(-1);
-    document.getElementById("next").onclick = () => changerMois(1);
-
-    [...new Set(EVENEMENTS.map(e => e.region))]
-      .sort((a, b) => a.localeCompare(b, "fr"))
-      .forEach(region => {
-        const option = element("option", region);
-        option.value = region;
-        filtre.appendChild(option);
-      });
-
-    filtre.onchange = () => {
+    bouton.onclick = () => {
+      dateSelectionnee = date;
       afficherCalendrier();
       afficherEvenements();
     };
 
+    calendrier.appendChild(bouton);
+  }
+}
+
+function afficherEvenements() {
+  liste.replaceChildren();
+
+  const titre = document.getElementById("selectionTitle");
+
+  const disponibles = evenementsFiltres()
+    .filter(e =>
+      !dateSelectionnee || aLieu(e, dateSelectionnee)
+    )
+    .sort((a, b) =>
+      (a.date + a.heure).localeCompare(b.date + b.heure)
+    );
+
+  titre.textContent = dateSelectionnee
+    ? `📅 Parties du ${dateSelectionnee.split("-").reverse().join("/")}`
+    : "📅 Toutes les parties";
+
+  if (!disponibles.length) {
+    liste.appendChild(
+      element(
+        "p",
+        EVENEMENTS.length
+          ? "Aucune partie pour cette sélection."
+          : "Aucune OP validée à afficher pour le moment."
+      )
+    );
+
+    return;
+  }
+
+  disponibles.forEach(e => {
+    const carte = element("article", "", "event");
+
+    carte.appendChild(element("h3", e.nom));
+    carte.appendChild(element("span", e.type, "tag"));
+
+    const dates = e.date === e.dateFin
+      ? e.date.split("-").reverse().join("/")
+      : `du ${e.date.split("-").reverse().join("/")} au ${e.dateFin.split("-").reverse().join("/")}`;
+
+    const infos = [
+      `📅 ${dates}${e.heure ? " à " + e.heure : ""}`,
+      `📍 ${e.region} — ${e.lieu}`,
+      `💶 Prix : ${e.prix}`
+    ];
+
+    if (e.description) {
+      infos.push(`📝 ${e.description}`);
+    }
+
+    infos.forEach(t => {
+      carte.appendChild(element("p", t));
+    });
+
+    const actions = element("div", "", "actions");
+
+    const interesse = interets().includes(e.id);
+
+    const bouton = element(
+      "button",
+      interesse ? "✅ Intéressé" : "⭐ Je suis intéressé",
+      interesse ? "interest active" : "interest"
+    );
+
+    bouton.onclick = () => modifierInteret(e.id);
+
+    actions.appendChild(bouton);
+
+    if (
+      e.reservation &&
+      /^https:\/\//i.test(e.reservation)
+    ) {
+      try {
+        const u = new URL(e.reservation);
+
+        if (u.protocol === "https:") {
+          const lien = element(
+            "a",
+            "🎟️ Réserver",
+            "link"
+          );
+
+          lien.href = u.href;
+          lien.target = "_blank";
+          lien.rel = "noopener noreferrer";
+
+          actions.appendChild(lien);
+        }
+      } catch {}
+    } else {
+      actions.appendChild(
+        element(
+          "span",
+          "Réservation non disponible",
+          "notice"
+        )
+      );
+    }
+
+    carte.appendChild(actions);
+    liste.appendChild(carte);
+  });
+}
+
+function mettreAJourRegions() {
+  const ancienne = filtre.value;
+
+  filtre.replaceChildren();
+
+  const toutes = element(
+    "option",
+    "Toutes les régions"
+  );
+
+  toutes.value = "";
+  filtre.appendChild(toutes);
+
+  [...new Set(EVENEMENTS.map(e => e.region))]
+    .sort((a, b) => a.localeCompare(b, "fr"))
+    .forEach(r => {
+      const option = element("option", r);
+      option.value = r;
+      filtre.appendChild(option);
+    });
+
+  filtre.value = [...filtre.options]
+    .some(o => o.value === ancienne)
+      ? ancienne
+      : "";
+}
+
+async function chargerEvenements() {
+  status.textContent = "Chargement des OP validées…";
+  status.classList.remove("error");
+
+  try {
+    const reponse = await fetch(API_URL, {
+      cache: "no-store",
+      redirect: "follow"
+    });
+
+    if (!reponse.ok) {
+      throw new Error(`HTTP ${reponse.status}`);
+    }
+
+    const data = await reponse.json();
+
+    if (data && data.erreur) {
+      throw new Error(String(data.erreur));
+    }
+
+    if (!data || !Array.isArray(data.evenements)) {
+      throw new Error("Format JSON inattendu");
+    }
+
+    EVENEMENTS = data.evenements
+      .map(normaliser)
+      .filter(Boolean);
+
+    mettreAJourRegions();
     afficherCalendrier();
     afficherEvenements();
-  </script>
+
+    status.textContent =
+      `✅ ${EVENEMENTS.length} OP validée(s) chargée(s).`;
+
+  } catch (er) {
+    console.error("FrenchSoft :", er);
+
+    status.textContent =
+      "⚠️ Impossible de récupérer les OP. Vérifie le déploiement Apps Script et les autorisations.";
+
+    status.classList.add("error");
+
+    afficherCalendrier();
+    afficherEvenements();
+  }
+}
+
+function changerMois(decalage) {
+  const d = new Date(
+    annee,
+    moisActuel + decalage,
+    1
+  );
+
+  annee = d.getFullYear();
+  moisActuel = d.getMonth();
+  dateSelectionnee = null;
+
+  afficherCalendrier();
+  afficherEvenements();
+}
+
+document.getElementById("prev").onclick = () =>
+  changerMois(-1);
+
+document.getElementById("next").onclick = () =>
+  changerMois(1);
+
+filtre.onchange = () => {
+  afficherCalendrier();
+  afficherEvenements();
+};
+
+afficherCalendrier();
+afficherEvenements();
+chargerEvenements();
+
+</script>
 </body>
 </html>
