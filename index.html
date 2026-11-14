@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>FrenchSoft Group | Calendrier des OP</title>
 
 <style>
@@ -17,7 +18,9 @@
   --muted: #a5b6b1;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -33,8 +36,32 @@ header {
   border-bottom: 1px solid var(--line);
 }
 
-h1 { margin: 0 0 8px; font-size: 28px; }
-header p { color: var(--muted); margin: 0; }
+h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+header p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.proposer {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 13px 22px;
+  background: var(--green);
+  color: #071b11;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 10px;
+  transition: transform .2s, background .2s;
+}
+
+.proposer:hover {
+  background: #80e6ad;
+  transform: translateY(-2px);
+}
 
 main {
   max-width: 1050px;
@@ -72,7 +99,9 @@ button {
   cursor: pointer;
 }
 
-button:hover { border-color: var(--green); }
+button:hover {
+  border-color: var(--green);
+}
 
 select {
   background: #26343a;
@@ -108,7 +137,9 @@ select {
   gap: 7px;
 }
 
-.day.has-event { border-color: #367c5d; }
+.day.has-event {
+  border-color: #367c5d;
+}
 
 .day.selected {
   background: #275640;
@@ -135,8 +166,14 @@ select {
   margin: 12px 0;
 }
 
-.event h3 { margin: 0 0 10px; }
-.event p { color: var(--muted); margin: 7px 0; }
+.event h3 {
+  margin: 0 0 10px;
+}
+
+.event p {
+  color: var(--muted);
+  margin: 7px 0;
+}
 
 .tag {
   display: inline-block;
@@ -172,8 +209,13 @@ select {
   font-size: 13px;
 }
 
-.status { margin: 0 0 14px; }
-.error { color: #ffb3a7; }
+.status {
+  margin: 0 0 14px;
+}
+
+.error {
+  color: #ffb3a7;
+}
 
 footer {
   text-align: center;
@@ -182,10 +224,27 @@ footer {
 }
 
 @media (max-width: 600px) {
-  h1 { font-size: 23px; }
-  .panel { padding: 12px; }
-  .day { min-height: 59px; padding: 7px 2px; }
-  .count { font-size: 9px; }
+  h1 {
+    font-size: 23px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .day {
+    min-height: 59px;
+    padding: 7px 2px;
+  }
+
+  .count {
+    font-size: 9px;
+  }
+
+  .proposer {
+    width: 100%;
+    max-width: 300px;
+  }
 }
 </style>
 </head>
@@ -194,7 +253,18 @@ footer {
 
 <header>
   <h1>🪖 FRENCHSOFT GROUP</h1>
+
   <p>Calendrier des parties et OP d'airsoft</p>
+
+  <!-- BOUTON POUR PROPOSER UNE OP -->
+  <a
+    class="proposer"
+    href="https://docs.google.com/forms/d/e/1FAIpQLSftEw9Cwn6FuAqYt1QePg0FIHTw6hrAN0uCoJxJpgPyCEsnCg/viewform?usp=header"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    ➕ Proposer une OP
+  </a>
 </header>
 
 <main>
@@ -209,6 +279,7 @@ footer {
 
   <div class="toolbar">
     <label for="region">📍 Filtrer par région</label>
+
     <select id="region">
       <option value="">Toutes les régions</option>
     </select>
@@ -236,7 +307,7 @@ footer {
 
 <p class="notice">
   Les événements affichés proviennent des propositions
-  validées par la modération.
+  validées par la modération FrenchSoft Group.
   Le bouton « Intéressé » enregistre ton choix
   uniquement sur cet appareil.
 </p>
@@ -250,14 +321,23 @@ footer {
 <script>
 "use strict";
 
-// CONNEXION GOOGLE APPS SCRIPT
+// GOOGLE APPS SCRIPT
 const API_URL =
   "https://script.google.com/macros/s/AKfycbzAXFyneS7HeXTGit-IuK6_IUrOU8z39aoCWGWWfdHC_sCDAo8YFH152JWm9i_z3auUaw/exec";
 
 const mois = [
-  "Janvier", "Février", "Mars", "Avril",
-  "Mai", "Juin", "Juillet", "Août",
-  "Septembre", "Octobre", "Novembre", "Décembre"
+  "Janvier",
+  "Février",
+  "Mars",
+  "Avril",
+  "Mai",
+  "Juin",
+  "Juillet",
+  "Août",
+  "Septembre",
+  "Octobre",
+  "Novembre",
+  "Décembre"
 ];
 
 const aujourdHui = new Date();
@@ -324,7 +404,6 @@ function normaliserDate(valeur) {
 function extraireDates(texte) {
   const s = String(texte || "").trim();
 
-  // Dates complètes : 28/11/2026 ou 2026-11-28
   const matches = [
     ...s.matchAll(
       /\d{4}-\d{2}-\d{2}|\d{1,2}[\/.]\d{1,2}[\/.]\d{4}/g
@@ -341,7 +420,6 @@ function extraireDates(texte) {
     return [matches[0], matches[0]];
   }
 
-  // Exemple : 28-29 novembre
   const moisFR = {
     janvier: 1,
     fevrier: 2,
@@ -368,11 +446,17 @@ function extraireDates(texte) {
 
   if (match) {
     const m = moisFR[match[3]];
+
     const a = match[4]
       ? Number(match[4])
       : aujourdHui.getFullYear();
 
-    const debut = dateISO(a, m - 1, Number(match[1]));
+    const debut = dateISO(
+      a,
+      m - 1,
+      Number(match[1])
+    );
+
     const fin = dateISO(
       a,
       m - 1,
@@ -388,7 +472,9 @@ function extraireDates(texte) {
 }
 
 function normaliser(e) {
-  if (!e || typeof e !== "object") return null;
+  if (!e || typeof e !== "object") {
+    return null;
+  }
 
   const texteDate = String(e.date || e.dates || "");
 
@@ -398,7 +484,9 @@ function normaliser(e) {
     String(e.dateFin || e.date_fin || e.fin || "")
   );
 
-  if (expliciteFin) fin = expliciteFin;
+  if (expliciteFin) {
+    fin = expliciteFin;
+  }
 
   if (
     !debut ||
@@ -411,7 +499,9 @@ function normaliser(e) {
 
   const nom = String(e.nom || e.name || "").trim();
 
-  if (!nom) return null;
+  if (!nom) {
+    return null;
+  }
 
   return {
     id: String(
@@ -487,20 +577,30 @@ function afficherCalendrier() {
   const nombreJours =
     new Date(annee, moisActuel + 1, 0).getDate();
 
-  for (let i = 0; i < premier; i++) {
-    calendrier.appendChild(element("div", ""));
-  }
-
   const visibles = evenementsFiltres();
 
+  for (let i = 0; i < premier; i++) {
+    calendrier.appendChild(
+      element("div", "")
+    );
+  }
+
   for (let jour = 1; jour <= nombreJours; jour++) {
-    const date = dateISO(annee, moisActuel, jour);
+    const date = dateISO(
+      annee,
+      moisActuel,
+      jour
+    );
 
     const nombre = visibles.filter(e =>
       aLieu(e, date)
     ).length;
 
-    const bouton = element("button", "", "day");
+    const bouton = element(
+      "button",
+      "",
+      "day"
+    );
 
     bouton.appendChild(
       element("span", String(jour))
@@ -529,6 +629,7 @@ function afficherCalendrier() {
 
     bouton.onclick = () => {
       dateSelectionnee = date;
+
       afficherCalendrier();
       afficherEvenements();
     };
@@ -544,7 +645,8 @@ function afficherEvenements() {
 
   const disponibles = evenementsFiltres()
     .filter(e =>
-      !dateSelectionnee || aLieu(e, dateSelectionnee)
+      !dateSelectionnee ||
+      aLieu(e, dateSelectionnee)
     )
     .sort((a, b) =>
       (a.date + a.heure).localeCompare(b.date + b.heure)
@@ -568,10 +670,19 @@ function afficherEvenements() {
   }
 
   disponibles.forEach(e => {
-    const carte = element("article", "", "event");
+    const carte = element(
+      "article",
+      "",
+      "event"
+    );
 
-    carte.appendChild(element("h3", e.nom));
-    carte.appendChild(element("span", e.type, "tag"));
+    carte.appendChild(
+      element("h3", e.nom)
+    );
+
+    carte.appendChild(
+      element("span", e.type, "tag")
+    );
 
     const dates = e.date === e.dateFin
       ? e.date.split("-").reverse().join("/")
@@ -588,22 +699,35 @@ function afficherEvenements() {
     }
 
     infos.forEach(t => {
-      carte.appendChild(element("p", t));
+      carte.appendChild(
+        element("p", t)
+      );
     });
 
-    const actions = element("div", "", "actions");
+    const actions = element(
+      "div",
+      "",
+      "actions"
+    );
 
     const interesse = interets().includes(e.id);
 
     const bouton = element(
       "button",
-      interesse ? "✅ Intéressé" : "⭐ Je suis intéressé",
-      interesse ? "interest active" : "interest"
+      interesse
+        ? "✅ Intéressé"
+        : "⭐ Je suis intéressé",
+      interesse
+        ? "interest active"
+        : "interest"
     );
 
-    bouton.onclick = () => modifierInteret(e.id);
+    bouton.onclick = () =>
+      modifierInteret(e.id);
 
     actions.appendChild(bouton);
+
+    let lienValide = false;
 
     if (
       e.reservation &&
@@ -624,9 +748,12 @@ function afficherEvenements() {
           lien.rel = "noopener noreferrer";
 
           actions.appendChild(lien);
+          lienValide = true;
         }
       } catch {}
-    } else {
+    }
+
+    if (!lienValide) {
       actions.appendChild(
         element(
           "span",
@@ -658,6 +785,7 @@ function mettreAJourRegions() {
     .sort((a, b) => a.localeCompare(b, "fr"))
     .forEach(r => {
       const option = element("option", r);
+
       option.value = r;
       filtre.appendChild(option);
     });
@@ -669,7 +797,9 @@ function mettreAJourRegions() {
 }
 
 async function chargerEvenements() {
-  status.textContent = "Chargement des OP validées…";
+  status.textContent =
+    "Chargement des OP validées…";
+
   status.classList.remove("error");
 
   try {
@@ -679,17 +809,26 @@ async function chargerEvenements() {
     });
 
     if (!reponse.ok) {
-      throw new Error(`HTTP ${reponse.status}`);
+      throw new Error(
+        `HTTP ${reponse.status}`
+      );
     }
 
     const data = await reponse.json();
 
     if (data && data.erreur) {
-      throw new Error(String(data.erreur));
+      throw new Error(
+        String(data.erreur)
+      );
     }
 
-    if (!data || !Array.isArray(data.evenements)) {
-      throw new Error("Format JSON inattendu");
+    if (
+      !data ||
+      !Array.isArray(data.evenements)
+    ) {
+      throw new Error(
+        "Format JSON inattendu"
+      );
     }
 
     EVENEMENTS = data.evenements
@@ -747,5 +886,6 @@ afficherEvenements();
 chargerEvenements();
 
 </script>
+
 </body>
 </html>
